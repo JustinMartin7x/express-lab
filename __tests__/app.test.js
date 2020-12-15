@@ -86,4 +86,42 @@ describe('recipe-lab routes', () => {
         });
       });
   });
-});
+  it('finds a recipe by id using GET route', async() => {
+    const recipe = await Recipe.insert({
+      name: 'brownies',
+      directions: [
+        'preheat oven to 375',
+        'mix ingredients',
+        'put dough on glass sheet',
+        'bake for 20 minutes'
+      ],
+    });
+
+    return request(app)
+    .get(`/api/v1/recipes/${recipe.id}`)
+    .then(res => {
+      expect(res.body).toEqual(recipe);
+    });
+  })
+
+  it('should delete a recipe using the Delete route', async() => {
+    const recipe = await Recipe.insert({
+      name: 'cake',
+      directions: [
+        'preheat oven to 375',
+        'mix ingredients',
+        'put dough on glass sheet',
+        'bake for 20 minutes'
+      ],
+    });
+    return request(app)
+    .delete(`/api/v1/recipes/${recipe.id}`)
+    .then(res => {
+      expect(res.body).toEqual(recipe);
+    });
+  })
+
+
+
+  })
+
