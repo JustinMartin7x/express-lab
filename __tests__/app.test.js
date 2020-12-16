@@ -14,6 +14,7 @@ describe('recipe-lab routes', () => {
       .post('/api/v1/recipes')
       .send({
         name: 'cookies',
+        ingredients: ['sunshine and daisies'],
         directions: [
           'preheat oven to 375',
           'mix ingredients',
@@ -25,6 +26,7 @@ describe('recipe-lab routes', () => {
         expect(res.body).toEqual({
           id: expect.any(String),
           name: 'cookies',
+          ingredients: ['sunshine and daisies'],
           directions: [
             'preheat oven to 375',
             'mix ingredients',
@@ -54,6 +56,7 @@ describe('recipe-lab routes', () => {
   it('updates a recipe by id', async() => {
     const recipe = await Recipe.insert({
       name: 'cookies',
+      ingredients: ['fire and more fire'],
       directions: [
         'preheat oven to 375',
         'mix ingredients',
@@ -66,6 +69,7 @@ describe('recipe-lab routes', () => {
       .put(`/api/v1/recipes/${recipe.id}`)
       .send({
         name: 'good cookies',
+        ingredients: ['too much fire'],
         directions: [
           'preheat oven to 375',
           'mix ingredients',
@@ -77,6 +81,7 @@ describe('recipe-lab routes', () => {
         expect(res.body).toEqual({
           id: expect.any(String),
           name: 'good cookies',
+          ingredients: ['too much fire'],
           directions: [
             'preheat oven to 375',
             'mix ingredients',
@@ -89,6 +94,7 @@ describe('recipe-lab routes', () => {
   it('finds a recipe by id using GET route', async() => {
     const recipe = await Recipe.insert({
       name: 'brownies',
+      ingredients: ['mmm brownies'],
       directions: [
         'preheat oven to 375',
         'mix ingredients',
@@ -107,6 +113,7 @@ describe('recipe-lab routes', () => {
   it('should delete a recipe using the Delete route', async() => {
     const recipe = await Recipe.insert({
       name: 'cake',
+      ingredients: ['mmm cake'],
       directions: [
         'preheat oven to 375',
         'mix ingredients',
