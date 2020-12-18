@@ -3,6 +3,7 @@ const pool = require('../lib/utils/pool');
 const request = require('supertest');
 const app = require('../lib/app');
 const Recipe = require('../lib/models/recipe');
+const { DH_NOT_SUITABLE_GENERATOR } = require('constants');
 
 describe('recipe-lab routes', () => {
   beforeEach(() => {
@@ -14,6 +15,7 @@ describe('recipe-lab routes', () => {
       .post('/api/v1/recipes')
       .send({
         name: 'cookies',
+        ingredients:[{'name': 'sugar', 'amount': '1cup', measurement: '1cup'}],
         directions: [
           'preheat oven to 375',
           'mix ingredients',
@@ -25,6 +27,7 @@ describe('recipe-lab routes', () => {
         expect(res.body).toEqual({
           id: expect.any(String),
           name: 'cookies',
+          ingredients:[{'name': 'sugar', 'amount': '1cup', measurement: '1cup'}],
           directions: [
             'preheat oven to 375',
             'mix ingredients',
@@ -54,6 +57,7 @@ describe('recipe-lab routes', () => {
   it('updates a recipe by id', async() => {
     const recipe = await Recipe.insert({
       name: 'cookies',
+      ingredients:[{'name': 'sugar', 'amount': '1cup', measurement: '1cup'}],
       directions: [
         'preheat oven to 375',
         'mix ingredients',
@@ -66,6 +70,7 @@ describe('recipe-lab routes', () => {
       .put(`/api/v1/recipes/${recipe.id}`)
       .send({
         name: 'good cookies',
+        ingredients:[{'name': 'sugar', 'amount': '1cup', measurement: '1cup'}],
         directions: [
           'preheat oven to 375',
           'mix ingredients',
@@ -77,6 +82,7 @@ describe('recipe-lab routes', () => {
         expect(res.body).toEqual({
           id: expect.any(String),
           name: 'good cookies',
+          ingredients:[{'name': 'sugar', 'amount': '1cup', measurement: '1cup'}],
           directions: [
             'preheat oven to 375',
             'mix ingredients',
@@ -86,4 +92,44 @@ describe('recipe-lab routes', () => {
         });
       });
   });
-});
+  it('finds a recipe by id using GET route', async() => {
+    const recipe = await Recipe.insert({
+      name: 'brownies',
+      ingredients:[{'name': 'sugar', 'amount': '1cup', measurement: '1cup'}],
+      directions: [
+        'preheat oven to 375',
+        'mix ingredients',
+        'put dough on glass sheet',
+        'bake for 20 minutes'
+      ],
+    });
+
+    return request(app)
+    .get(`/api/v1/recipes/${recipe.id}`)
+    .then(res => {
+      expect(res.body).toEqual(recipe);
+    });
+  })
+
+  it('should delete a recipe using the Delete route', async() => {
+    const recipe = await Recipe.insert({
+      name: 'cake',
+      ingredients:[{'name': 'sugar', 'amount': '1cup', measurement: '1cup'}],
+      directions: [
+        'preheat oven to 375',
+        'mix ingredients',
+        'put dough on glass sheet',
+        'bake for 20 minutes'
+      ],
+    });
+    return request(app)
+    .delete(`/api/v1/recipes/${recipe.id}`)
+    .then(res => {
+      expect(res.body).toEqual(recipe);
+    });
+  })
+
+
+
+  })
+
